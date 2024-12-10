@@ -1,16 +1,6 @@
-/* src/index.css */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* LoginPage.css */
 
-:root {
-  --main-color: #137c87;
-}
-
-body,
-html {
+body, html {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -24,7 +14,7 @@ html {
 
 .left-section {
   flex: 1;
-  background-color: var(--main-color);
+  background: linear-gradient(135deg, #008c8c, #005f5f);
   color: white;
   display: flex;
   flex-direction: column;
@@ -43,14 +33,30 @@ html {
   margin-bottom: 20px;
 }
 
+.left-section input {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 1rem;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+}
+
 .login-button {
   padding: 10px 20px;
   font-size: 1rem;
-  color: var(--main-color);
+  color: #008c8c;
   background-color: white;
-  border: none;
-  border-radius: 9px;
+  border: 2px solid white;
+  border-radius: 25px;
   cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #008c8c;
+  color: white;
 }
 
 .right-section {
@@ -64,6 +70,7 @@ html {
 
 .right-section h2 {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .signup-form {
@@ -85,10 +92,11 @@ html {
   padding: 10px;
   font-size: 1rem;
   color: white;
-  background-color: var(--main-color);
+  background-color: #008c8c;
   border: none;
-  border-radius: 9px;
+  border-radius: 25px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .signup-button:hover {

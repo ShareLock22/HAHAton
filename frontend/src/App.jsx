@@ -1,12 +1,22 @@
-// src/App.jsx
 import React from "react";
-import LoginPage from "./components/HelloWorld";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/header/header";
+import ProfilePage from "./pages/profilePage/profilePage";
+import BookingPage from "./pages/bookingPage/BookingPage";
+import LoginPage from "./pages/loginPage/loginPage";
+import SignUpPage from "./pages/signupPage/signUpPage";
 
 const App = () => {
   return (
-    <div className="App">
-      <LoginPage />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<SignUpPage />} />
+        {/* Другие маршруты */}
+      </Routes>
+    </Router>
   );
 };
 
