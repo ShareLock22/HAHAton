@@ -1,11 +1,11 @@
 // src/App.jsx
 import React from "react";
-import HelloWorld from "./components/HelloWorld";
+import LoginPage from "./components/HelloWorld";
 
 const App = () => {
   return (
     <div className="App">
-      <HelloWorld />
+      <LoginPage />
     </div>
   );
 };
