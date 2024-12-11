@@ -3,26 +3,23 @@ import Header from "../../components/header/header";
 
 export default function ProfilePage() {
   const [user, setUser] = useState({
-    fullName: "John Doe",
-    phone: "123-456-7890",
-    email: "johndoe123@gmail.com",
+    fullName: "Jane Smith",
+    phone: "8983142021",
+    email: "jane.smith@example.com",
     bookings: [
       {
         id: 1,
-        room: "Room 1",
+        room: "Сибкодинг",
         date: "2023-12-10",
         startTime: "10:00",
         endTime: "12:00",
-      },
-      {
-        id: 2,
-        room: "Room 2",
-        date: "2023-12-11",
-        startTime: "14:00",
-        endTime: "16:00",
+        status: "active",
       },
     ],
   });
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedUser, setEditedUser] = useState({ ...user });
 
   useEffect(() => {
     // Логика для загрузки данных пользователя и его бронирований из API
@@ -31,6 +28,30 @@ export default function ProfilePage() {
     //   .then(response => response.json())
     //   .then(data => setUser(data));
   }, []);
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    setUser(editedUser);
+    setIsEditing(false);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedUser({
+      ...editedUser,
+      [name]: value,
+    });
+  };
+
+  const handleCancelBooking = (id) => {
+    const updatedBookings = user.bookings.map((booking) =>
+      booking.id === id ? { ...booking, status: "cancelled" } : booking
+    );
+    setUser({ ...user, bookings: updatedBookings });
+  };
 
   return (
     <>
@@ -45,14 +66,14 @@ export default function ProfilePage() {
             <div className="bg-[#137C87] lg:w-2/3 p-6 rounded-md shadow-md border border-gray-300 text-white">
               <div className="space-y-6">
                 <div>
-                  <label className="block text-sm font-medium">
-                    ФИО
-                  </label>
+                  <label className="block text-sm font-medium">ФИО</label>
                   <div className="mt-2">
                     <input
                       type="text"
-                      value={user.fullName}
-                      readOnly
+                      name="fullName"
+                      value={editedUser.fullName}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
                       className="block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400 sm:text-sm"
                     />
                   </div>
@@ -64,31 +85,43 @@ export default function ProfilePage() {
                   <div className="mt-2">
                     <input
                       type="tel"
-                      value={user.phone}
-                      readOnly
+                      name="phone"
+                      value={editedUser.phone}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
                       className="block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400 sm:text-sm"
                     />
-
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium">
-                    Почта
-                  </label>
+                  <label className="block text-sm font-medium">Почта</label>
                   <div className="mt-2">
                     <input
-                      type="tel"
-                      value={user.email}
-                      readOnly
+                      type="email"
+                      name="email"
+                      value={editedUser.email}
+                      onChange={handleChange}
+                      readOnly={!isEditing}
                       className="block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-none placeholder:text-gray-400 sm:text-sm"
                     />
-
                   </div>
                 </div>
                 <div className="flex justify-end">
-                  <button className="bg-white text-black px-4 py-2 rounded-md border border-gray-300">
-                    Сохранить изменения
-                  </button>
+                  {isEditing ? (
+                    <button
+                      onClick={handleSave}
+                      className="bg-white text-black px-4 py-2 rounded-md border border-gray-300"
+                    >
+                      Сохранить изменения
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleEdit}
+                      className="bg-white text-black px-4 py-2 rounded-md border border-gray-300"
+                    >
+                      Редактировать
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -100,7 +133,11 @@ export default function ProfilePage() {
                 {user.bookings.map((booking) => (
                   <div
                     key={booking.id}
-                    className="p-4 bg-gray-100 rounded-md shadow-sm border border-gray-300"
+                    className={`p-4 rounded-md shadow-sm border border-gray-300 ${
+                      booking.status === "cancelled"
+                        ? "bg-red-100"
+                        : "bg-[#137C8780]" // Основной цвет с прозрачностью 50%
+                    }`}
                   >
                     <h4 className="text-lg font-semibold text-gray-900">
                       {booking.room}
@@ -109,13 +146,25 @@ export default function ProfilePage() {
                     <p className="text-sm text-gray-500">
                       {booking.startTime} - {booking.endTime}
                     </p>
+                    <p className="text-sm text-gray-500">
+                      Статус:{" "}
+                      {booking.status === "cancelled" ? "Отменено" : "Активно"}
+                    </p>
+                    {booking.status === "active" && (
+                      <button
+                        onClick={() => handleCancelBooking(booking.id)}
+                        className="mt-2 text-red-700 hover:underline"
+                      >
+                        Отменить бронирование
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
           </div>
           <div className="mt-6 text-center">
-
+            {/* Дополнительные элементы управления бронированиями могут быть добавлены здесь */}
           </div>
         </div>
       </div>

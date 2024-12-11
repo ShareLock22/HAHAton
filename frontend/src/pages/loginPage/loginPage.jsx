@@ -1,10 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Импортируем useNavigate для навигации
+import users from "../../data/data"; // Импортируем локальную базу пользователей
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState(""); // Состояние для ошибок
+  const [successMessage, setSuccessMessage] = useState(""); // Состояние для уведомления об успешном входе
+  const navigate = useNavigate(); // Используем useNavigate для навигации
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,8 +21,28 @@ export default function LoginPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Логика для отправки данных на сервер
-    console.log("Form Data:", formData);
+    setError(""); // Сброс ошибок
+    setSuccessMessage(""); // Сброс уведомления об успешном входе
+
+    const user = users.find(
+      (u) => u.email === formData.email && u.password === formData.password
+    );
+
+    if (!user) {
+      setError("Неверный email или пароль");
+      return;
+    }
+
+    // Сохраните токен в localStorage или другом хранилище
+    localStorage.setItem("token", user.id);
+
+    // Установим уведомление об успешном входе
+    setSuccessMessage("Вы успешно вошли в систему!");
+
+    // Перенаправление на страницу бронирования через 2 секунды
+    setTimeout(() => {
+      navigate("/booking");
+    }, 2000);
   };
 
   return (
@@ -34,6 +59,12 @@ export default function LoginPage() {
         <h2 className="text-center text-2xl font-bold tracking-tight text-gray-900 pb-5">
           Войдите в свой аккаунт
         </h2>
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {successMessage && (
+          <div className="p-4 mb-4 text-green-500 border border-green-500 rounded-md bg-green-100">
+            {successMessage}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label
@@ -84,6 +115,12 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
+
+        <div className="mt-4 text-center">
+          <a href="/" className="text-[#137C87] hover:underline">
+            Зарегистрироваться
+          </a>
+        </div>
       </div>
     </div>
   );
